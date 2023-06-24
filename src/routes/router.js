@@ -1,65 +1,42 @@
-import ReactDOM from "react-dom/client";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Redirect,
-  redirect,
-} from "react-router-dom";
-import Layout from "./../pages/Layout/Layout";
-import Home from "./../pages/Home/Home";
-import Blogs from "./../pages/Blogs/Blogs";
-import Contact from "./../pages/Contacts/Contacts";
-import NoPage from "./../pages/NoPage/NoPage";
-import { PublicRoute } from "./routes";
+import React from "react";
+import { Route, Routes} from "react-router-dom";
+import withRouter from "../hooks/withRouter"
+import Home from "../pages/home/Home";
+import Portfolio from "../pages/portfolio/Portfolio";
+import ContactUs from "../pages/contact/ContactUs";
+import About from "../pages/about/About";
+import { Socialicons } from "../components/socialicons";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-export const AppRouter = (props) => {
+const AnimatedRoutes = withRouter(({ location }) => (
+  <TransitionGroup>
+    <CSSTransition
+      key={location.key}
+      timeout={{
+        enter: 400,
+        exit: 400,
+      }}
+      classNames="page"
+      unmountOnExit
+    >
+      <Routes location={location}>
+        <Route exact path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </CSSTransition>
+  </TransitionGroup>
+));
+
+function AppRoutes() {
   return (
-    <Router basename="/talent">
-      {/* <Suspense fallback={<Loader />}> */}
-      <div className="content-wrap">
-        <div
-          className="headerSpaceRouter"
-          // className={` ${
-          //   !id || WizardFlow <= 5 || emailVerified
-          //     ? "headerSpaceRouter"
-          //     : "headerSpaceRouter-the-drop"
-          // }`}
-        >
-          {/* {!emailVerified && id && WizardFlow > 5 && <EmailVerification />} */}
-          {/* <Header
-          changeStage={props.shareStage}
-          stage={props.stage}
-          id={id}
-          emailVerified={emailVerified}
-          WizardFlow={WizardFlow}
-          EmailVerification={EmailVerification}
-        /> */}
-          <Routes>
-            {/* <PublicRoute exact path="/">
-          <Home />
-        </PublicRoute> */}
-            <PublicRoute exact path="/Home">
-              <Home />
-            </PublicRoute>
-            <PublicRoute exact path="/blogs">
-              <Blogs />
-            </PublicRoute>
-            <PublicRoute exact path="/layout">
-              <Layout />
-            </PublicRoute>
-            <PublicRoute exact path="/contact">
-              <Contact />
-            </PublicRoute>
-            <PublicRoute exact path="/nopage">
-              <NoPage />
-            </PublicRoute>
-            <redirect to="/" />
-          </Routes>
-        </div>
-      </div>
-      {/* {window.location.pathname !== "/talent/messages" && <Footer />} */}
-      {/* </Suspense> */}
-    </Router>
+    <div className="s_c">
+      <AnimatedRoutes />
+      <Socialicons />
+    </div>
   );
-};
+}
+
+export default AppRoutes;
